@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container sign-up" id="sign_up">
+            <form action="{% url 'wall:register' %}" method="post" class="form">
+                {% csrf_token %}
+                <h2>Sign Up</h2>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="first_name" placeholder="First Name">
+                </div>
+                {% if reg_errors.first_name %}
+                    {% for e in reg_errors.first_name %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="last_name" placeholder="Last Name"> 
+                </div>
+                {% if reg_errors.last_name %}
+                    {% for e in reg_errors.last_name %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email">
+                </div>
+                {% if reg_errors.email %}
+                    {% for e in reg_errors.email %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password">
+                </div>
+                {% if reg_errors.password %}
+                    {% for e in reg_errors.password %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password">
+                </div>
+                {% if reg_errors.confirm_password %}
+                    {% for e in reg_errors.confirm_password %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn">Sign Up</button>
+                <div class="switch-form">
+                    <p>Already have an account? <button type="button" id="sign-in-btn">Sign In</button></p>
+                </div>
+            </form>
+        </div>
+        <div class="form-container sign-in" id="sign_in">
+            <form action="{% url 'wall:login' %}" method="post" class="form">
+                {% csrf_token %}
+                <h2>Sign In</h2>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="email" name="email" placeholder="Email">
+                </div>
+                {% if login_errors.email %}
+                    {% for e in login_errors.email %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password">
+                </div>
+                {% if login_errors.password %}
+                    {% for e in login_errors.password %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if login_errors.login %}
+                    {% for e in login_errors.login %}
+                        <div class="invalid">{{ e }}</div>
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn">Sign In</button>
+                <div class="switch-form">
+                    <p>Don't have an account? <button type="button" id="sign-up-btn">Sign Up</button></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const container = document.querySelector('.container');
+        const signUpBtn = document.getElementById('sign-up-btn');
+        const signInBtn = document.getElementById('sign-in-btn');
+        
+        signInBtn.addEventListener('click', () => {
+            container.classList.add('active');
+        });
+        
+        signUpBtn.addEventListener('click', () => {
+            container.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

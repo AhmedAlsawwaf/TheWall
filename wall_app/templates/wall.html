@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wall</title>
+    <link rel="stylesheet" href="../static/wallStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+                <span>TheWall</span>
+            </div>
+            <div class="user-info">
+                <img src="{{user.profile}}" alt="User Profile">
+                <span>{{user.first_name}} {{user.last_name}}</span>
+                <form action="{% url 'wall:logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container main-content">
+        <aside class="sidebar">
+            <div class="profile-card">
+                <img src="{{user.profile}}" alt="User Profile">
+                <h3>{{user.first_name}} {{user.last_name}}</h3>
+            </div>
+        </aside>
+        <main class="posts-container">
+            <form action="{% url 'wall:create_message' %}" method="post" class="create-post">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <h3>Create Post</h3>
+                <textarea class="post-input" name="post_message" placeholder="What's on your mind?"></textarea>
+                <button type="submit" class="post-btn">Post</button>
+                <div style="clear: both;"></div>
+            </form>
+            <h2 class="section-title">Recent Posts</h2>
+             {% for p in post %}
+            <div class="post">
+                <div class="post-header">
+                    <img src="{{p.user.profile}}" alt="User">
+                    <div class="post-user-info">
+                        <h4>{{p.user.first_name}} {{p.user.last_name}}</h4>
+                        <span>{{p.created_at}}</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>{{p.message}}</p>
+                </div>
+                <div class="comments">
+                    {% for m in p.comments.all %}
+                    <div class="comment">
+                        <img src="{{m.user.profile}}" alt="User">
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <span class="comment-user">{{m.user.first_name}} {{m.user.last_name}}</span>
+                                <span class="comment-time">{{m.created_at}}</span>
+                            </div>
+                            <p class="comment-text">{{m.comment}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <form action="{% url 'wall:create_comment' %}" method="post" class="add-comment">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{user.id}}">
+                        <input type="hidden" name="message_id" value="{{p.id}}">
+                        <input type="text" name="comment" placeholder="Write a comment...">
+                        <button type="submit" class="comment-btn">Comment</button>
+                    </form>
+                </div>
+            </div>
+             {% endfor %}
+        </main>
+    </div>
+</body>
+</html>
